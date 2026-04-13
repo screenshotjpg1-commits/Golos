@@ -23,7 +23,6 @@
             overflow-x: hidden;
         }
 
-        /* плавные движущиеся градиенты */
         body::before {
             content: '';
             position: absolute;
@@ -74,20 +73,13 @@
         }
 
         @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .glass-card:hover {
             transform: scale(1.01);
             background: rgba(12, 30, 28, 0.65);
-            box-shadow: 0 35px 65px -15px rgba(0, 0, 0, 0.7);
         }
 
         h1 {
@@ -113,7 +105,6 @@
             backdrop-filter: blur(4px);
         }
 
-        /* микрофон с пульсацией */
         .mic-wrapper {
             position: relative;
             display: inline-block;
@@ -131,7 +122,6 @@
             border-radius: 50%;
             opacity: 0;
             pointer-events: none;
-            transition: opacity 0.2s;
         }
 
         .mic-btn {
@@ -159,7 +149,6 @@
 
         .mic-btn:active {
             transform: scale(0.94);
-            background: linear-gradient(145deg, #FFB845, #FFA020);
         }
 
         .mic-btn.recording {
@@ -187,7 +176,6 @@
             font-size: 0.95rem;
             color: #d4f3ec;
             border: 1px solid rgba(255,255,200,0.25);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
         }
 
         .status-led {
@@ -218,7 +206,7 @@
 
         @keyframes pulseBlue {
             0% { transform: scale(1); opacity: 0.7; }
-            50% { transform: scale(1.4); opacity: 1; background-color: #60a5fa; }
+            50% { transform: scale(1.4); opacity: 1; }
             100% { transform: scale(1); opacity: 0.7; }
         }
 
@@ -237,8 +225,6 @@
             transition: all 0.3s;
             overflow-y: auto;
             max-height: 300px;
-            scrollbar-width: thin;
-            scrollbar-color: #ffb845 #1e4a44;
         }
 
         .answer-card::-webkit-scrollbar {
@@ -263,7 +249,6 @@
             display: inline-block;
             padding: 8px 20px;
             border-radius: 40px;
-            backdrop-filter: blur(4px);
         }
 
         .loader-dots {
@@ -336,12 +321,11 @@
 
 <script>
     // ============================================================
-    // API КЛЮЧ УЖЕ ВСТАВЛЕН! ВСЁ ГОТОВО К РАБОТЕ.
+    // API КЛЮЧ ВСТАВЛЕН! ВСЁ ГОТОВО К РАБОТЕ.
     // ============================================================
-    const API_KEY = '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';
+    const API_KEY = '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';
     const API_URL = 'https://openrouter.ai/api/v1/chat/completions';
     
-    // DOM элементы
     const micBtn = document.getElementById('micButton');
     const statusTextSpan = document.getElementById('statusText');
     const statusLed = document.getElementById('statusLed');
@@ -368,7 +352,6 @@
         }
     }
 
-    // распознавание речи
     let recognition = null;
     if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
         const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -408,7 +391,7 @@
             if (!response.ok) {
                 const err = await response.json();
                 console.error('API Error:', err);
-                return `Ошибка API (${response.status}). Проверь интернет или повтори позже.`;
+                return `Ошибка API (${response.status}). Попробуй позже.`;
             }
             const data = await response.json();
             return data.choices[0].message.content;
