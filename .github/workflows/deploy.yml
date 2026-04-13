@@ -2,22 +2,24 @@ name: Deploy with API Key
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, master ]
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
       
       - name: Create config file with API key
         run: |
           mkdir -p api
           echo '{"apiKey": "${{ secrets.OPENROUTER_API_KEY }}"}' > api/config.json
       
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./
-          publish_branch: gh-pages
+          path: ./
+      
+      - name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@v4
