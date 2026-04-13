@@ -2,61 +2,19 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>ИИ-помощник | Голосовой ассистент для папы</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ИИ-помощник для папы</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             min-height: 100vh;
             background: radial-gradient(ellipse at 30% 40%, #0a2f2a 0%, #05100e 100%);
-            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+            font-family: system-ui, sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
             padding: 20px;
-            position: relative;
-            overflow-x: hidden;
         }
-
-        body::before {
-            content: '';
-            position: absolute;
-            width: 200%;
-            height: 200%;
-            top: -50%;
-            left: -50%;
-            background: radial-gradient(circle, rgba(80, 210, 180, 0.2) 0%, rgba(0,0,0,0) 60%);
-            animation: slowDrift 35s infinite alternate;
-            pointer-events: none;
-        }
-
-        body::after {
-            content: '';
-            position: absolute;
-            width: 150%;
-            height: 150%;
-            bottom: -30%;
-            right: -30%;
-            background: radial-gradient(circle, rgba(255, 180, 80, 0.08) 0%, rgba(0,0,0,0) 70%);
-            animation: slowDriftReverse 40s infinite alternate;
-            pointer-events: none;
-        }
-
-        @keyframes slowDrift {
-            0% { transform: translate(0, 0) rotate(0deg); }
-            100% { transform: translate(8%, 5%) rotate(5deg); }
-        }
-
-        @keyframes slowDriftReverse {
-            0% { transform: translate(0, 0) rotate(0deg); }
-            100% { transform: translate(-6%, -4%) rotate(-4deg); }
-        }
-
         .glass-card {
             background: rgba(12, 30, 28, 0.55);
             backdrop-filter: blur(20px);
@@ -65,291 +23,114 @@
             max-width: 800px;
             width: 100%;
             text-align: center;
-            box-shadow: 0 30px 60px -20px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.12);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            transition: all 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
-            z-index: 3;
-            animation: fadeInUp 0.7s ease-out;
+            border: 1px solid rgba(255,255,255,0.2);
         }
-
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .glass-card:hover {
-            transform: scale(1.01);
-            background: rgba(12, 30, 28, 0.65);
-        }
-
         h1 {
-            font-size: 3.2rem;
-            font-weight: 700;
-            background: linear-gradient(135deg, #FFF8E7 0%, #C8F0E8 50%, #FFE4B5 100%);
+            font-size: 3rem;
+            background: linear-gradient(135deg, #FFF8E7 0%, #C8F0E8 100%);
             background-clip: text;
             -webkit-background-clip: text;
             color: transparent;
-            margin-bottom: 12px;
-            letter-spacing: -0.8px;
         }
-
-        .sub {
-            color: #b5dfd4;
-            font-size: 1.05rem;
-            font-weight: 400;
-            margin-bottom: 40px;
-            background: rgba(255,255,220,0.08);
-            display: inline-block;
-            padding: 6px 20px;
-            border-radius: 60px;
-            backdrop-filter: blur(4px);
-        }
-
-        .mic-wrapper {
-            position: relative;
-            display: inline-block;
-            margin-bottom: 32px;
-        }
-
-        .pulse-ring {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 150px;
-            height: 150px;
-            background: radial-gradient(circle, rgba(255, 200, 100, 0.4), transparent);
-            border-radius: 50%;
-            opacity: 0;
-            pointer-events: none;
-        }
-
+        .sub { color: #b5dfd4; margin-bottom: 40px; }
         .mic-btn {
             width: 130px;
             height: 130px;
             background: linear-gradient(145deg, #FFDE91, #FFB845);
             border: none;
             border-radius: 50%;
-            font-size: 3.8rem;
+            font-size: 3.5rem;
             cursor: pointer;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.4), 0 0 0 4px rgba(255, 200, 100, 0.3);
-            transition: all 0.25s ease;
-            position: relative;
-            z-index: 2;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #3a2a10;
+            margin-bottom: 32px;
         }
-
-        .mic-btn:hover {
-            transform: scale(1.02);
-            background: linear-gradient(145deg, #FFE4A0, #FFC45A);
-        }
-
-        .mic-btn:active {
-            transform: scale(0.94);
-        }
-
+        .mic-btn:active { transform: scale(0.94); }
         .mic-btn.recording {
             background: linear-gradient(145deg, #FF8866, #FF4422);
-            box-shadow: 0 0 0 8px rgba(255, 80, 40, 0.4);
-            animation: micPulse 1.3s infinite;
+            animation: pulse 1.3s infinite;
         }
-
-        @keyframes micPulse {
-            0% { box-shadow: 0 0 0 0 rgba(255, 80, 40, 0.5); }
-            70% { box-shadow: 0 0 0 20px rgba(255, 80, 40, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(255, 80, 40, 0); }
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(255,80,40,0.5); }
+            70% { box-shadow: 0 0 0 20px rgba(255,80,40,0); }
+            100% { box-shadow: 0 0 0 0 rgba(255,80,40,0); }
         }
-
         .status-badge {
-            background: rgba(0, 0, 0, 0.55);
+            background: rgba(0,0,0,0.55);
             backdrop-filter: blur(12px);
-            padding: 12px 28px;
+            padding: 10px 24px;
             border-radius: 80px;
             display: inline-flex;
             align-items: center;
-            gap: 12px;
-            margin-bottom: 30px;
-            font-weight: 500;
-            font-size: 0.95rem;
+            gap: 10px;
+            margin-bottom: 28px;
             color: #d4f3ec;
-            border: 1px solid rgba(255,255,200,0.25);
         }
-
         .status-led {
-            width: 12px;
-            height: 12px;
+            width: 10px;
+            height: 10px;
             border-radius: 50%;
             background-color: #3fe0a0;
-            box-shadow: 0 0 8px #2ecc71;
-            transition: 0.2s;
         }
-
-        .status-led.listening {
-            background-color: #f5a623;
-            box-shadow: 0 0 12px #f1c40f;
-            animation: blinkFast 0.9s infinite;
-        }
-
-        .status-led.thinking {
-            background-color: #3b82f6;
-            box-shadow: 0 0 12px #60a5fa;
-            animation: pulseBlue 1s infinite;
-        }
-
-        @keyframes blinkFast {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.3; transform: scale(0.8); }
-        }
-
-        @keyframes pulseBlue {
-            0% { transform: scale(1); opacity: 0.7; }
-            50% { transform: scale(1.4); opacity: 1; }
-            100% { transform: scale(1); opacity: 0.7; }
-        }
-
+        .status-led.listening { background-color: #f5a623; animation: blink 0.9s infinite; }
+        .status-led.thinking { background-color: #3b82f6; animation: pulseBlue 1s infinite; }
+        @keyframes blink { 50% { opacity: 0.3; } }
+        @keyframes pulseBlue { 50% { transform: scale(1.4); } }
         .answer-card {
-            background: rgba(8, 25, 22, 0.7);
+            background: rgba(8,25,22,0.7);
             backdrop-filter: blur(12px);
-            border-radius: 56px;
-            padding: 32px;
+            border-radius: 48px;
+            padding: 28px;
             text-align: left;
-            font-size: 1.05rem;
-            line-height: 1.6;
             color: #f2f7f5;
-            min-height: 170px;
-            margin-bottom: 32px;
+            min-height: 150px;
             border: 1px solid rgba(255,215,150,0.2);
-            transition: all 0.3s;
-            overflow-y: auto;
-            max-height: 300px;
         }
-
-        .answer-card::-webkit-scrollbar {
-            width: 6px;
-        }
-        .answer-card::-webkit-scrollbar-track {
-            background: #1e4a44;
-            border-radius: 10px;
-        }
-        .answer-card::-webkit-scrollbar-thumb {
-            background: #ffb845;
-            border-radius: 10px;
-        }
-
-        .hint-text {
-            font-size: 0.8rem;
-            color: #90c0b5;
-            text-align: center;
-            letter-spacing: 0.3px;
-            margin-top: 20px;
-            background: rgba(0,0,0,0.25);
-            display: inline-block;
-            padding: 8px 20px;
-            border-radius: 40px;
-        }
-
-        .loader-dots {
-            display: inline-flex;
-            gap: 5px;
-            align-items: center;
-        }
+        .loader-dots { display: inline-flex; gap: 4px; }
         .loader-dots span {
-            width: 8px;
-            height: 8px;
-            background: #c0f5ea;
-            border-radius: 50%;
-            display: inline-block;
-            animation: waveUp 1.3s infinite;
+            width: 6px; height: 6px; background: #c0f5ea; border-radius: 50%;
+            animation: wave 1.2s infinite;
         }
         .loader-dots span:nth-child(2) { animation-delay: 0.2s; }
         .loader-dots span:nth-child(3) { animation-delay: 0.4s; }
-        @keyframes waveUp {
-            0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
-            30% { transform: translateY(-8px); opacity: 1; }
+        @keyframes wave {
+            0%,100% { transform: translateY(0); opacity: 0.4; }
+            30% { transform: translateY(-6px); opacity: 1; }
         }
-
-        footer {
-            margin-top: 28px;
-            font-size: 0.7rem;
-            opacity: 0.55;
-            color: #b0ddd2;
-            text-align: center;
-        }
-
-        .wave-decoration {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 60px;
-            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none"><path d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z" opacity=".2" fill="%23ffffff"></path></svg>') repeat-x;
-            background-size: 1200px 60px;
-            opacity: 0.15;
-            pointer-events: none;
-            z-index: 1;
-        }
+        footer { margin-top: 24px; font-size: 0.7rem; opacity: 0.55; color: #b0ddd2; }
     </style>
 </head>
 <body>
-<div class="wave-decoration"></div>
 <div class="glass-card">
-    <h1>✨ Голосовой ИИ</h1>
-    <div class="sub">Спроси о чём угодно — отвечает нейросеть</div>
-
-    <div class="mic-wrapper">
-        <div class="pulse-ring" id="pulseRing"></div>
-        <button class="mic-btn" id="micButton">🎤</button>
-    </div>
-
-    <div class="status-badge" id="statusBadge">
+    <h1>🎙️ Голосовой ИИ</h1>
+    <div class="sub">Спроси о чём угодно</div>
+    <button class="mic-btn" id="micButton">🎤</button>
+    <div class="status-badge">
         <span class="status-led" id="statusLed"></span>
-        <span id="statusText">🎧 Готов слушать</span>
+        <span id="statusText">Готов</span>
     </div>
-
-    <div class="answer-card" id="answerCard">
-        <span style="opacity:0.7;">🌟 Нажми на микрофон и скажи что угодно: «Какая погода?», «Расскажи историю», «Как испечь хлеб?», «Пошути» — ИИ ответит голосом.</span>
-    </div>
-
-    <div class="hint-text">
-        🧠 Работает через нейросеть Gemini | Голосовой ввод + ответ голосом
-    </div>
-    <footer>🔐 Ключ активирован | Нажми микрофон и говори спокойно</footer>
+    <div class="answer-card" id="answerCard">🌟 Нажми на микрофон и задай вопрос</div>
+    <footer>🔐 Голосовой помощник с ИИ | Работает через нейросеть</footer>
 </div>
-
 <script>
-    // ============================================================
-    // API КЛЮЧ ВСТАВЛЕН! ВСЁ ГОТОВО К РАБОТЕ.
-    // ============================================================
-    const API_KEY = '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';
+    // Ключ подставляется через fetch к /api/config во время сборки
+    let API_KEY = '';
     const API_URL = 'https://openrouter.ai/api/v1/chat/completions';
+    
+    // Загружаем ключ с сервера (из GitHub Secrets)
+    fetch('/api/config')
+        .then(res => res.json())
+        .then(data => { API_KEY = data.apiKey; })
+        .catch(err => console.error('Ошибка загрузки ключа:', err));
     
     const micBtn = document.getElementById('micButton');
     const statusTextSpan = document.getElementById('statusText');
     const statusLed = document.getElementById('statusLed');
     const answerCard = document.getElementById('answerCard');
-    const pulseRing = document.getElementById('pulseRing');
 
     function updateStatus(text, state) {
         statusTextSpan.innerText = text;
         statusLed.className = 'status-led';
-        if(state === 'listening') {
-            statusLed.classList.add('listening');
-        } else if(state === 'thinking') {
-            statusLed.classList.add('thinking');
-        }
-    }
-
-    function animatePulse(active) {
-        if(active) {
-            pulseRing.style.opacity = '1';
-            micBtn.classList.add('recording');
-        } else {
-            pulseRing.style.opacity = '0';
-            micBtn.classList.remove('recording');
-        }
+        if (state === 'listening') statusLed.classList.add('listening');
+        if (state === 'thinking') statusLed.classList.add('thinking');
     }
 
     let recognition = null;
@@ -357,96 +138,55 @@
         const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
         recognition = new SpeechRecognition();
         recognition.lang = 'ru-RU';
-        recognition.continuous = false;
-        recognition.interimResults = false;
     }
 
     function speakAnswer(text) {
         const utterance = new SpeechSynthesisUtterance(text);
         utterance.lang = 'ru-RU';
-        utterance.rate = 0.94;
-        utterance.pitch = 1.05;
+        utterance.rate = 0.92;
         window.speechSynthesis.cancel();
         window.speechSynthesis.speak(utterance);
     }
 
     async function askAI(question) {
+        if (!API_KEY) return "⏳ Подождите 5 секунд, ключ загружается...";
         try {
             const response = await fetch(API_URL, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${API_KEY}`
-                },
+                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${API_KEY}` },
                 body: JSON.stringify({
                     model: 'google/gemini-2.0-flash-exp:free',
-                    messages: [
-                        { role: 'system', content: 'Ты — дружелюбный голосовой помощник для папы. Отвечай кратко, тепло, понятно. Если спрашивают погоду — дай примерный прогноз для его региона. Всегда будь полезным и вежливым.' },
-                        { role: 'user', content: question }
-                    ],
-                    max_tokens: 600,
-                    temperature: 0.75
+                    messages: [{ role: 'system', content: 'Ты — дружелюбный голосовой помощник для папы. Отвечай кратко.' }, { role: 'user', content: question }],
+                    max_tokens: 500
                 })
             });
-            if (!response.ok) {
-                const err = await response.json();
-                console.error('API Error:', err);
-                return `Ошибка API (${response.status}). Попробуй позже.`;
-            }
+            if (!response.ok) return `Ошибка API (${response.status})`;
             const data = await response.json();
             return data.choices[0].message.content;
-        } catch(e) {
-            console.error('Network error:', e);
-            return "Ошибка соединения. Проверь интернет и попробуй снова.";
-        }
+        } catch(e) { return "Ошибка сети"; }
     }
 
     micBtn.addEventListener('click', () => {
-        if (!recognition) {
-            answerCard.innerHTML = "❌ Ваш браузер не поддерживает голосовой ввод. Используйте Chrome, Edge или Safari.";
-            updateStatus('Голос не поддерживается', 'idle');
-            return;
-        }
-        try {
-            recognition.start();
-            updateStatus('🎙️ Слушаю... скажите вопрос', 'listening');
-            animatePulse(true);
-            answerCard.innerHTML = "🔊 <span style='opacity:0.9;'>Слушаю ваш голос...</span>";
-        } catch(e) {
-            console.warn(e);
-            updateStatus('⚠️ Микрофон занят, попробуй ещё', 'idle');
-            animatePulse(false);
-        }
+        if (!recognition) { answerCard.innerHTML = "❌ Браузер не поддерживает голосовой ввод."; return; }
+        if (!API_KEY) { answerCard.innerHTML = "⏳ Подождите, инициализация..."; return; }
+        recognition.start();
+        updateStatus('🎙️ Слушаю...', 'listening');
+        micBtn.classList.add('recording');
+        answerCard.innerHTML = "🔊 Слушаю...";
     });
 
     recognition.onresult = async (event) => {
         const userQuestion = event.results[0][0].transcript;
-        updateStatus('🧠 Думаю, обращаюсь к ИИ...', 'thinking');
-        animatePulse(false);
-        answerCard.innerHTML = `🗣️ <strong>Вы спросили:</strong> «${userQuestion}»<br><br><div class="loader-dots"><span></span><span></span><span></span></div> <span style="opacity:0.7;">ИИ набирает ответ...</span>`;
-        
+        updateStatus('🤔 Думаю...', 'thinking');
+        micBtn.classList.remove('recording');
+        answerCard.innerHTML = `🗣️ Вы: «${userQuestion}»<br><br><div class="loader-dots"><span></span><span></span><span></span></div>`;
         const aiReply = await askAI(userQuestion);
-        
-        updateStatus('✅ Готов к новому вопросу', 'idle');
-        answerCard.innerHTML = `🗣️ <strong>Вы:</strong> «${userQuestion}»<br><br>🤖 <strong>Помощник:</strong> ${aiReply}`;
+        updateStatus('✅ Готов', 'idle');
+        answerCard.innerHTML = `🗣️ Вы: «${userQuestion}»<br><br>🤖 ${aiReply}`;
         speakAnswer(aiReply);
     };
-    
-    recognition.onerror = (event) => {
-        console.error('Speech error:', event.error);
-        updateStatus('⚠️ Ошибка микрофона, проверь разрешения', 'idle');
-        animatePulse(false);
-        answerCard.innerHTML = "❌ Не удалось распознать голос. Разреши доступ к микрофону и нажми снова.";
-    };
-    
-    recognition.onend = () => {
-        if (statusTextSpan.innerText.includes('Слушаю') || statusTextSpan.innerText.includes('Думаю')) {
-            if(!statusTextSpan.innerText.includes('Готов')) {
-                updateStatus('🎧 Готов к вопросу', 'idle');
-            }
-        }
-        animatePulse(false);
-    };
+    recognition.onerror = () => { updateStatus('⚠️ Ошибка', 'idle'); micBtn.classList.remove('recording'); };
+    recognition.onend = () => { micBtn.classList.remove('recording'); if (statusTextSpan.innerText.includes('Слушаю')) updateStatus('Готов', 'idle'); };
 </script>
 </body>
 </html>
